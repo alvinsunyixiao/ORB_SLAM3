@@ -25,6 +25,9 @@
 #include "ORBmatcher.h"
 #include "G2oTypes.h"
 
+#include <opencv2/imgproc/types_c.h>
+#include <opencv2/opencv.hpp>
+
 #include<mutex>
 #include<thread>
 
@@ -1244,7 +1247,7 @@ void LoopClosing::CorrectLoop()
     }
 
     // Loop closed. Release Local Mapping.
-    mpLocalMapper->Release();    
+    mpLocalMapper->Release();
 
     mLastLoopKFid = mpCurrentKF->mnId; //TODO old varible, it is not use in the new algorithm
 }
@@ -1903,7 +1906,7 @@ void LoopClosing::printReprojectionError(set<KeyFrame*> &spLocalWindowKFs, KeyFr
     for(KeyFrame* pKFi : spLocalWindowKFs)
     {
         //cout << "KF " << pKFi->mnId << endl;
-        cv::Mat img_i = cv::imread(pKFi->mNameFile, CV_LOAD_IMAGE_UNCHANGED);
+        cv::Mat img_i = cv::imread(pKFi->mNameFile, cv::IMREAD_UNCHANGED);
         //cout << "Image -> " << img_i.cols << ", " << img_i.rows << endl;
         cv::cvtColor(img_i, img_i, CV_GRAY2BGR);
         //cout << "Change of color in the image " << endl;
@@ -2585,7 +2588,7 @@ void LoopClosing::RunGlobalBundleAdjustment(Map* pActiveMap, unsigned long nLoop
 
                     assert(!pKF->mVwbGBA.empty());
                     pKF->SetVelocity(pKF->mVwbGBA);
-                    pKF->SetNewBias(pKF->mBiasGBA);                    
+                    pKF->SetNewBias(pKF->mBiasGBA);
                 }
 
                 lpKFtoCheck.pop_front();

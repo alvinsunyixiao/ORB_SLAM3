@@ -23,7 +23,8 @@
 #include<fstream>
 #include<chrono>
 
-#include<opencv2/core/core.hpp>
+#include <opencv2/imgproc/types_c.h>
+#include <opencv2/opencv.hpp>
 
 #include<System.h>
 
@@ -33,7 +34,7 @@ void LoadImages(const string &strImagePath, const string &strPathTimes,
                 vector<string> &vstrImages, vector<double> &vTimeStamps);
 
 int main(int argc, char **argv)
-{  
+{
     if(argc < 5)
     {
         cerr << endl << "Usage: ./mono_euroc path_to_vocabulary path_to_settings path_to_sequence_folder_1 path_to_times_file_1 (path_to_image_folder_2 path_to_times_file_2 ... path_to_image_folder_N path_to_times_file_N) (trajectory_file_name)" << endl;
@@ -91,7 +92,7 @@ int main(int argc, char **argv)
         {
 
             // Read image from file
-            im = cv::imread(vstrImageFilenames[seq][ni],CV_LOAD_IMAGE_UNCHANGED);
+            im = cv::imread(vstrImageFilenames[seq][ni], cv::IMREAD_UNCHANGED);
             double tframe = vTimestampsCam[seq][ni];
 
             if(im.empty())

@@ -33,25 +33,18 @@ endif()
 
 LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
 
-find_package(OpenCV 3)
-if(NOT OpenCV_FOUND)
-   find_package(OpenCV 2.4.3 QUIET)
-   if(NOT OpenCV_FOUND)
-      message(FATAL_ERROR "OpenCV > 2.4.3 not found.")
-   endif()
-endif()
+find_package(OpenCV REQUIRED)
 
 MESSAGE("OPENCV VERSION:")
 MESSAGE(${OpenCV_VERSION})
 
-find_package(Eigen3 3.1.0 REQUIRED)
+find_package(Eigen3 3.3 REQUIRED)
 find_package(Pangolin REQUIRED)
 
 include_directories(
 ${PROJECT_SOURCE_DIR}
 ${PROJECT_SOURCE_DIR}/include
 ${PROJECT_SOURCE_DIR}/include/CameraModels
-${EIGEN3_INCLUDE_DIR}
 ${Pangolin_INCLUDE_DIRS}
 )
 
@@ -114,16 +107,31 @@ include/MLPnPsolver.h
 include/TwoViewReconstruction.h
 src/TwoViewReconstruction.cc)
 
+add_subdirectory(Thirdparty/DBoW2)
 add_subdirectory(Thirdparty/g2o)
 
-target_link_libraries(${PROJECT_NAME}
-${OpenCV_LIBS}
-${EIGEN3_LIBS}
-${Pangolin_LIBRARIES}
-${PROJECT_SOURCE_DIR}/Thirdparty/DBoW2/lib/libDBoW2.so
-${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o.so
--lboost_serialization
--lcrypto
+target_link_libraries(${PROJECT_NAME} PUBLIC
+    ${OpenCV_LIBS}
+    ${Pangolin_LIBRARIES}
+    Eigen3::Eigen
+    DBoW2
+    g2o
+    boost_serialization
+    crypto
+)
+
+target_compile_options(${PROJECT_NAME} PRIVATE
+    -Wno-deprecated-declarations
+    -Wno-deprecated
+    -Wno-dangling-else
+    -Wno-sign-compare
+    -Wno-unused-variable
+    -Wno-unused-but-set-variable
+    -Wno-unused-local-typedefs
+    -Wno-maybe-uninitialized
+    -Wno-conversion-null
+    -Wno-comment
+    -Wno-reorder
 )
 
 
