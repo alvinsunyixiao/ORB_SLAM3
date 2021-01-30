@@ -41,15 +41,6 @@ MESSAGE(${OpenCV_VERSION})
 find_package(Eigen3 3.3 REQUIRED)
 find_package(Pangolin REQUIRED)
 
-include_directories(
-${PROJECT_SOURCE_DIR}
-${PROJECT_SOURCE_DIR}/include
-${PROJECT_SOURCE_DIR}/include/CameraModels
-${Pangolin_INCLUDE_DIRS}
-)
-
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
-
 add_library(${PROJECT_NAME} SHARED
 src/System.cc
 src/Tracking.cc
@@ -109,6 +100,14 @@ src/TwoViewReconstruction.cc)
 
 add_subdirectory(Thirdparty/DBoW2)
 add_subdirectory(Thirdparty/g2o)
+
+target_include_directories(${PROJECT_NAME} PUBLIC
+    ${PROJECT_SOURCE_DIR}
+    ${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/include/CameraModels
+    ${Pangolin_INCLUDE_DIRS}
+)
+
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
     ${OpenCV_LIBS}
